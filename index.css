@@ -1,3 +1,8 @@
 .movie img {
     height: 50px;
 }
+
+.actors {
+    display: flex;
+    flex-direction: column;
+}

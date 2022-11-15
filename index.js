@@ -6,24 +6,24 @@ $(document).ready(function () {
         e.preventDefault();
     });
     $('#wtwForm').on('submit', (e) => {
-        wtwSearch();
+        let selectedRate = $("#wtwAge").val();
+        findMovieByRating(selectedRate);
         e.preventDefault();
     })
 
-    let movieList;
-
     function findMoviesByTitle(input) {
-        axios.get('http://www.omdbapi.com/?apikey=7ac5c54' + '&s=' + input)
+        axios.get('https://api.themoviedb.org/3/search/movie?api_key=fce6281d9d40ad70409d4863f9cf2286&query=' + input)
             .then((response) => {
-                movieList = response.data.Search;
+                let movieList = response.data.results;
+                console.log(movieList);
                 let result = '';
                 for (let i = 0; i < movieList.length; i++) {
                     result +=
                         `<div class="col-lg-4" class="movie" id="movie-${i}" style="margin: 20px 0 20px 0">
-                            <img src="${movieList[i].Poster}" style="height: 400px">
-                            <h5>${movieList[i].Title}</h5>
+                            <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 400px">
+                            <h5>${movieList[i].original_title}</h5>
                             <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-primary detail-button" onmousedown="findMovieDetailsById('${movieList[i].imdbID}', '${i}')">
+                            <button type="button" class="btn btn-primary detail-button-1" onmousedown="findMovieDetailsById('${movieList[i].id}', '${i}')">
                                 Movie Detail
                             </button>
                         </div>`
@@ -38,10 +38,18 @@ $(document).ready(function () {
 
 function findMovieDetailsById(id, index) {
     console.log(id + " " + index);
-    axios.get('http://www.omdbapi.com/?apikey=7ac5c54' + '&i=' + id)
+    axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=fce6281d9d40ad70409d4863f9cf2286`)
         .then((response) => {
             console.log(response);
             let movie = response.data;
+
+            let genres = '';
+            for (let i = 0; i < movie.genres.length; i++) {
+                if (i != movie.genres.length - 1)
+                    genres += movie.genres[i].name + ", ";
+                else
+                    genres += movie.genres[i].name;
+            }
             $(`#movie-${index}`)
                 .append(`
                 <!-- Modal -->
@@ -54,15 +62,10 @@ function findMovieDetailsById(id, index) {
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <h2>${movie.Title}</h2>
-                                <ul class="list-group">
-                                    <li class="list-group-item"><strong>Genre: </strong>${movie.Genre}</li>
-                                    <li class="list-group-item"><strong>Released: </strong>${movie.Released}</li>
-                                    <li class="list-group-item"><strong>Rated: </strong>${movie.Rated}</li>
-                                    <li class="list-group-item"><strong>IMDB Rating: </strong>${movie.imdbRating}</li>
-                                    <li class="list-group-item"><strong>Director: </strong>${movie.Director}</li>
-                                    <li class="list-group-item"><strong>Writer: </strong>${movie.Writer}</li>
-                                    <li class="list-group-item"><strong>Actors: </strong>${movie.Actors}</li>
+                                <h2>${movie.original_title}</h2>
+                                <ul class="list-group" id="list${index}">
+                                    <li class="list-group-item"><strong>Genres: </strong>${genres}</li>
+                                    <li class="list-group-item"><strong>Released: </strong>${movie.release_date}</li>
                                 </ul>
                             </div>
                             <div class="modal-footer">
@@ -71,9 +74,9 @@ function findMovieDetailsById(id, index) {
                         </div>
                     </div>
                 </div> `);
+            findMovieCredits(id, index);
+            findMovieReviews(id, index);
             let detailButton = document.getElementsByClassName('detail-button')[index];
-            console.log(document.getElementsByClassName('detail-button')[index]);
-            console.log(detailButton.parentElement);
             detailButton.setAttribute("data-bs-toggle", "modal");
             detailButton.setAttribute("data-bs-target", `#movieModal${index}`);
         })
@@ -82,10 +85,65 @@ function findMovieDetailsById(id, index) {
         })
 }
 
+function findMovieCredits(id, index) {
+    axios.get(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=fce6281d9d40ad70409d4863f9cf2286`)
+        .then((response) => {
+            let cast = response.data.cast;
 
+            let actors = '';
+            for (let i = 0; i < cast.length; i++) {
 
-const wtw = document.getElementById("wtwAge");
-wtw.addEventListener('change', (event) => {
-    let ageRating = event.target.value;
-    findMovieByRating(ageRating);
-})
+                actors += `<span>${cast[i].name}</span>`;
+            }
+            $(`#list${index}`).append(`<li class="list-group-item"><strong>Actors:</strong><div class="actors">${actors}</div></li>`);
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+}
+
+function findMovieReviews(id, index) {
+    axios.get(`https://api.themoviedb.org/3/movie/${id}/reviews?api_key=fce6281d9d40ad70409d4863f9cf2286`)
+        .then((response) => {
+            let review = response.data.results;
+
+            let author, content, date, result = '';
+            for (let i = 0; i < 3; i++) {
+
+                author = review[i].author;
+                content = review[i].content;
+                date = (review[i].created_at);
+                date = date.substr(0, 19).replace('T', ' at ');
+                if ((author && content && date) != "null")
+                    result += `<div id="review-${index}"><h6 style="margin-top: 10px">${author} - ${date}</h6><p style="text-align:start">${content}</p><hr></div>`
+            }
+            $(`#list${index}`).append(`<li class="list-group-item"><strong>Reviews:</strong><div class="reviews">${result}</div></li>`);
+        })
+}
+
+function findMovieByRating(rating) {
+    console.log(rating);
+    axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=fce6281d9d40ad70409d4863f9cf2286&certification_country=US&certification=${rating}`)
+        .then((response) => {
+            let movieList = response.data.results;
+            console.log(movieList);
+            let result = '';
+            for (let i = 0; i < movieList.length; i++) {
+                result +=
+                    `<div class="col-lg-4" class="movie" id="movie-${i}" style="margin: 20px 0 20px 0">
+                            <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 400px">
+                            <h5>${movieList[i].original_title}</h5>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary detail-button" onmousedown="findMovieDetailsById('${movieList[i].id}', '${i}')">
+                                Movie Detail
+                            </button>
+                        </div>`
+                $("#movieList").html(result);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+}
+//add more sorting
+//add pages (not 20 movies only)
