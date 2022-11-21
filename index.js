@@ -10,6 +10,10 @@ $(document).ready(function () {
         findMovieByRating(selectedRate);
         e.preventDefault();
     })
+    $('#popularMoviesForm').on('submit', (e) => {
+        getPopularMovies();
+        e.preventDefault();
+    })
 
     function findMoviesByTitle(input) {
         axios.get('https://api.themoviedb.org/3/search/movie?api_key=fce6281d9d40ad70409d4863f9cf2286&query=' + input)
@@ -23,7 +27,7 @@ $(document).ready(function () {
                             <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 400px">
                             <h5>${movieList[i].original_title}</h5>
                             <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-primary detail-button-1" onmousedown="findMovieDetailsById('${movieList[i].id}', '${i}')">
+                            <button type="button" class="btn btn-primary detail-button" onmousedown="findMovieDetailsById('${movieList[i].id}', '${i}')">
                                 Movie Detail
                             </button>
                         </div>`
@@ -37,6 +41,7 @@ $(document).ready(function () {
 })
 
 function findMovieDetailsById(id, index) {
+    $(`#movieModal${index}`).remove();
     console.log(id + " " + index);
     axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=fce6281d9d40ad70409d4863f9cf2286`)
         .then((response) => {
@@ -64,8 +69,9 @@ function findMovieDetailsById(id, index) {
                             <div class="modal-body">
                                 <h2>${movie.original_title}</h2>
                                 <ul class="list-group" id="list${index}">
-                                    <li class="list-group-item"><strong>Genres: </strong>${genres}</li>
-                                    <li class="list-group-item"><strong>Released: </strong>${movie.release_date}</li>
+                                    <li class="list-group-item"><strong>Overview: </strong><div>${movie.overview}</div></li>
+                                    <li class="list-group-item"><strong>Genres: </strong><div>${genres}</div></li>
+                                    <li class="list-group-item"><strong>Released: </strong><div>${movie.release_date}</div></li>
                                 </ul>
                             </div>
                             <div class="modal-footer">
@@ -91,11 +97,11 @@ function findMovieCredits(id, index) {
             let cast = response.data.cast;
 
             let actors = '';
-            for (let i = 0; i < cast.length; i++) {
+            for (let i = 0; i < 10; i++) {
 
                 actors += `<span>${cast[i].name}</span>`;
             }
-            $(`#list${index}`).append(`<li class="list-group-item"><strong>Actors:</strong><div class="actors">${actors}</div></li>`);
+            $(`#list${index}`).append(`<li class="list-group-item"><strong>Actors:</strong><div class="actors">${actors} etc.</div></li>`);
         })
         .catch((err) => {
             console.log(err);
@@ -106,7 +112,6 @@ function findMovieReviews(id, index) {
     axios.get(`https://api.themoviedb.org/3/movie/${id}/reviews?api_key=fce6281d9d40ad70409d4863f9cf2286`)
         .then((response) => {
             let review = response.data.results;
-
             let author, content, date, result = '';
             for (let i = 0; i < 3; i++) {
 
@@ -115,11 +120,13 @@ function findMovieReviews(id, index) {
                 date = (review[i].created_at);
                 date = date.substr(0, 19).replace('T', ' at ');
                 if ((author && content && date) != "null")
-                    result += `<div id="review-${index}"><h6 style="margin-top: 10px">${author} - ${date}</h6><p style="text-align:start">${content}</p><hr></div>`
+                    result += `<div id="review-${index}"><h6 style="margin-top: 10px">${author} - ${date}</h6><p style="text-align:start" id="content-${i}">${content}</p><hr></div>`
             }
             $(`#list${index}`).append(`<li class="list-group-item"><strong>Reviews:</strong><div class="reviews">${result}</div></li>`);
         })
 }
+
+
 
 function findMovieByRating(rating) {
     console.log(rating);
@@ -145,5 +152,32 @@ function findMovieByRating(rating) {
             console.log(err);
         })
 }
+
+function getPopularMovies() {
+    axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=fce6281d9d40ad70409d4863f9cf2286&language=en-US&page=1`)
+        .then((response) => {
+            let movieList = response.data.results;
+            console.log(movieList);
+            let result = '';
+            for (let i = 0; i < movieList.length; i++) {
+                result +=
+                    `<div class="col-lg-4" class="movie" id="movie-${i}" style="margin: 20px 0 20px 0">
+                            <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 400px">
+                            <h5>${movieList[i].original_title}</h5>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary detail-button" onmousedown="findMovieDetailsById('${movieList[i].id}', '${i}')">
+                                Movie Detail
+                            </button>
+                        </div>`
+                $("#movieList").html(result);
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+
+}
+
+//add read more/show less for actors list and review comment
 //add more sorting
 //add pages (not 20 movies only)
+//add css

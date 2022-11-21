@@ -16,23 +16,29 @@
 
     <div class="container text-center">
         <div class="row">
-            <div class="col-6">
+            <div class="col-4">
                 <h3>Search movie</h3>
                 <form id="searchForm">
                     <input type="text" class="" id="searchText" placeholder="Search Moveily">
                 </form>
             </div>
-            <div class="col-6">
+            <div class="col-4">
                 <h3>What to watch?</h3>
                 <form id="wtwForm">
                     <select name="wtw-age" id="wtwAge">
                         <option value="G">All ages</option>
-                        <option value="PG">Children with Parental Guidance</option>
-                        <option value="PG-13">Children with Parental Caution</option>
+                        <option value="PG">Children with parental guidance</option>
+                        <option value="PG-13">Children with parental caution</option>
                         <option value="R">Children above 17</option>
                         <option value="NR">Not evaluated film</option>
                     </select>
                     <button type="submit" id="wtwButton">Search</button>
+                </form>
+            </div>
+            <div class="col-4">
+                <h3>Popular Movies</h3>
+                <form id="popularMoviesForm">
+                    <button type="submit" id="popularMoviesButton">Get</button>
                 </form>
             </div>
             <div class="row movie-list" id="movieList"></div>
