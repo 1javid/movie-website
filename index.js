@@ -14,8 +14,13 @@ $(document).ready(function () {
         getPopularMovies();
         e.preventDefault();
     })
+    $('#topRatedMoviesForm').on('submit', (e) => {
+        getTopRatedMovies();
+        e.preventDefault();
+    })
 
     function findMoviesByTitle(input) {
+        $(".movie").remove();
         axios.get('https://api.themoviedb.org/3/search/movie?api_key=fce6281d9d40ad70409d4863f9cf2286&query=' + input)
             .then((response) => {
                 let movieList = response.data.results;
@@ -63,11 +68,10 @@ function findMovieDetailsById(id, index) {
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                <h5 class="modal-title" id="exampleModalLabel">${movie.original_title}</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <h2>${movie.original_title}</h2>
                                 <ul class="list-group" id="list${index}">
                                     <li class="list-group-item"><strong>Overview: </strong><div>${movie.overview}</div></li>
                                     <li class="list-group-item"><strong>Genres: </strong><div>${genres}</div></li>
@@ -126,9 +130,8 @@ function findMovieReviews(id, index) {
         })
 }
 
-
-
 function findMovieByRating(rating) {
+    $(".movie").remove();
     console.log(rating);
     axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=fce6281d9d40ad70409d4863f9cf2286&certification_country=US&certification=${rating}`)
         .then((response) => {
@@ -154,6 +157,7 @@ function findMovieByRating(rating) {
 }
 
 function getPopularMovies() {
+    $(".movie").remove();
     axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=fce6281d9d40ad70409d4863f9cf2286&language=en-US&page=1`)
         .then((response) => {
             let movieList = response.data.results;
@@ -174,10 +178,52 @@ function getPopularMovies() {
         }).catch((err) => {
             console.log(err);
         })
-
 }
 
-//add read more/show less for actors list and review comment
-//add more sorting
-//add pages (not 20 movies only)
-//add css
+function getTopRatedMovies() {
+    $(".movie").remove();
+    axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=fce6281d9d40ad70409d4863f9cf2286&language=en-US&page=1`)
+        .then((response) => {
+            let movieList = response.data.results;
+            console.log(movieList);
+            let result = '';
+            for (let i = 0; i < movieList.length; i++) {
+                result +=
+                    `<div class="col-lg-4" class="movie" id="movie-${i}" style="margin: 20px 0 20px 0">
+                            <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 400px">
+                            <h5>${movieList[i].original_title}</h5>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary detail-button" onmousedown="findMovieDetailsById('${movieList[i].id}', '${i}')">
+                                Movie Detail
+                            </button>
+                        </div>`
+                $("#movieList").html(result);
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+}
+
+function getTrending() {
+    $(".movie").remove();
+    axios.get(`https://api.themoviedb.org/3/trending/movie/day?api_key=fce6281d9d40ad70409d4863f9cf2286`)
+        .then((response) => {
+            let movieList = response.data.results;
+            console.log(movieList);
+            let result = '';
+            for (let i = 0; i < movieList.length; i++) {
+                result +=
+                    `<div class="col-lg-4" class="movie" id="movie-${i}" style="margin: 20px 0 20px 0">
+                            <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 400px">
+                            <h5>${movieList[i].original_title}</h5>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary detail-button" onmousedown="findMovieDetailsById('${movieList[i].id}', '${i}')">
+                                Movie Detail
+                            </button>
+                        </div>`
+                $("#movieList").html(result);
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+}
