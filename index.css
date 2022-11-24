@@ -3,86 +3,14 @@ body {
     color: #F0CAA3;
 }
 
-img {
-    height: 50px;
-    border: 1px solid #F0CAA3;
-    border-radius: 8px;
-}
-
-.detail-button {
-    color: #F0CAA3;
-    background-color: rgb(24, 24, 46);
-    border: 1px solid #F0CAA3;
-    width: 180px;
-    margin: 10px 0 10px 0;
-}
-
-.detail-button:hover {
-    background-color: #200c34;
-    color: #F0CAA3;
-    border: 1px solid #F0CAA3;
-}
-
-.movie {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.actors {
-    display: flex;
-    flex-direction: column;
-}
-
-#reviewComment {
-    white-space: pre-wrap;
-    white-space: -moz-pre-wrap;
-    white-space: -pre-wrap;
-    white-space: -o-pre-wrap
-}
-
-.modal-content {
-    background-color: rgba(15, 15, 31, 0.59);
-}
-
-.modal-header {
-    font-family: 'Bebas Neue', cursive;
-}
-
-.modal-body {
-    font-family: 'EB Garamond', serif;
-}
-
-.modal-body div {
-    border-radius: 5px;
-    color: #F0CAA3;
-    padding: 0 30px 0 30px;
-}
-
-.modal-body strong {
-    color: #c6a686;
-    font-family: 'Zilla Slab', serif;
-}
-
-.close-button {
-    background-color: rgb(24, 24, 46);
-    color: #F0CAA3;
-}
-
-.close-button:hover {
-    background-color: #200c34;
-    color: #F0CAA3;
-}
-
-#searchForm {
-    color: #F0CAA3;
-}
-
 .forms {
     display: flex;
     flex-direction: row;
     position: fixed;
+}
+
+#searchForm {
+    color: #F0CAA3;
 }
 
 #searchText {
@@ -96,10 +24,6 @@ img {
     padding-left: 8px;
     color: #f0c9a3a7;
     font-size: 14px;
-}
-
-#movieList {
-    margin-top: 40px;
 }
 
 #wtwAge,
@@ -127,4 +51,91 @@ img {
 #ageButton:hover,
 #movieButton:hover {
     background-color: #200c34;
+}
+
+.movie {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#movieList {
+    margin-top: 40px;
+}
+
+.actors {
+    display: flex;
+    flex-direction: column;
+}
+
+#reviewComment {
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap
+}
+
+img {
+    height: 50px;
+    border: 1px solid #F0CAA3;
+    border-radius: 8px;
+}
+
+.detail-button {
+    color: #F0CAA3;
+    background-color: rgb(24, 24, 46);
+    border: 1px solid #F0CAA3;
+    width: 180px;
+    margin: 10px 0 10px 0;
+}
+
+.detail-button:hover {
+    background-color: #200c34;
+    color: #F0CAA3;
+    border: 1px solid #F0CAA3;
+}
+
+.modal-content {
+    background-color: rgba(15, 15, 31, 0.59);
+}
+
+.modal-header {
+    font-family: 'Bebas Neue', cursive;
+}
+
+.modal-body {
+    font-family: 'EB Garamond', serif;
+}
+
+.modal-body div {
+    border-radius: 5px;
+    color: #F0CAA3;
+    padding: 0 30px 0 30px;
+}
+
+.modal-body strong {
+    color: #c6a686;
+    font-family: 'Zilla Slab', serif;
+}
+
+@media only screen and (max-width: 994px) {
+
+    #ageForm,
+    #movieForm {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .forms {
+        flex-direction: column;
+    }
+
+    #ageButton,
+    #movieButton {
+        width: 50%;
+        margin: auto;
+        margin-top: 5px;
+    }
 }
