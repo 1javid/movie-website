@@ -5,17 +5,19 @@ $(document).ready(function () {
         findMoviesByTitle(searchedText);
         e.preventDefault();
     });
-    $('#wtwForm').on('submit', (e) => {
+    $('#ageForm').on('submit', (e) => {
         let selectedRate = $("#wtwAge").val();
         findMovieByRating(selectedRate);
         e.preventDefault();
     })
-    $('#popularMoviesForm').on('submit', (e) => {
-        getPopularMovies();
-        e.preventDefault();
-    })
-    $('#topRatedMoviesForm').on('submit', (e) => {
-        getTopRatedMovies();
+    $('#movieForm').on('submit', (e) => {
+        let selectedMovieType = $("#wtwMovie").val();
+        if (selectedMovieType == 'popular')
+            getPopularMovies();
+        else if (selectedMovieType == 'topRated')
+            getTopRatedMovies();
+        else if (selectedMovieType == 'trending')
+            getTrendingMovies();
         e.preventDefault();
     })
 
@@ -28,9 +30,8 @@ $(document).ready(function () {
                 let result = '';
                 for (let i = 0; i < movieList.length; i++) {
                     result +=
-                        `<div class="col-lg-4" class="movie" id="movie-${i}" style="margin: 20px 0 20px 0">
-                            <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 400px">
-                            <h5>${movieList[i].original_title}</h5>
+                        `<div class="col-md-3 movie" id="movie-${i}">
+                            <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 250px; width: 180px">
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary detail-button" onmousedown="findMovieDetailsById('${movieList[i].id}', '${i}')">
                                 Movie Detail
@@ -52,7 +53,6 @@ function findMovieDetailsById(id, index) {
         .then((response) => {
             console.log(response);
             let movie = response.data;
-
             let genres = '';
             for (let i = 0; i < movie.genres.length; i++) {
                 if (i != movie.genres.length - 1)
@@ -71,16 +71,16 @@ function findMovieDetailsById(id, index) {
                                 <h5 class="modal-title" id="exampleModalLabel">${movie.original_title}</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="modal-body">
-                                <ul class="list-group" id="list${index}">
-                                    <li class="list-group-item"><strong>Overview: </strong><div>${movie.overview}</div></li>
-                                    <li class="list-group-item"><strong>Genres: </strong><div>${genres}</div></li>
-                                    <li class="list-group-item"><strong>Released: </strong><div>${movie.release_date}</div></li>
-                                </ul>
+                            <div class="modal-body" id="modalBody${index}">
+                                    <strong>Overview</strong><div>${movie.overview}</div>
+                                    <hr>
+                                    <strong>Genres</strong><div>${genres}</div></li>
+                                    <hr>
+                                    <strong>Released</strong><div>${movie.release_date.replaceAll('-', '/')}</div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary close-button" data-bs-dismiss="modal">Close</button>
+            </div>
                         </div>
                     </div>
                 </div> `);
@@ -99,13 +99,11 @@ function findMovieCredits(id, index) {
     axios.get(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=fce6281d9d40ad70409d4863f9cf2286`)
         .then((response) => {
             let cast = response.data.cast;
-
             let actors = '';
             for (let i = 0; i < 10; i++) {
-
                 actors += `<span>${cast[i].name}</span>`;
             }
-            $(`#list${index}`).append(`<li class="list-group-item"><strong>Actors:</strong><div class="actors">${actors} etc.</div></li>`);
+            $(`#modalBody${index}`).append(`<hr><strong>Actors</strong><div class="actors">${actors} etc.</div>`);
         })
         .catch((err) => {
             console.log(err);
@@ -118,15 +116,16 @@ function findMovieReviews(id, index) {
             let review = response.data.results;
             let author, content, date, result = '';
             for (let i = 0; i < 3; i++) {
-
                 author = review[i].author;
                 content = review[i].content;
                 date = (review[i].created_at);
                 date = date.substr(0, 19).replace('T', ' at ');
+                date = date.replaceAll('-', '/');
+
                 if ((author && content && date) != "null")
                     result += `<div id="review-${index}"><h6 style="margin-top: 10px">${author} - ${date}</h6><p style="text-align:start" id="content-${i}">${content}</p><hr></div>`
             }
-            $(`#list${index}`).append(`<li class="list-group-item"><strong>Reviews:</strong><div class="reviews">${result}</div></li>`);
+            $(`#modalBody${index}`).append(`<hr><strong>Reviews</strong><div class="reviews">${result}</div>`);
         })
 }
 
@@ -140,9 +139,8 @@ function findMovieByRating(rating) {
             let result = '';
             for (let i = 0; i < movieList.length; i++) {
                 result +=
-                    `<div class="col-lg-4" class="movie" id="movie-${i}" style="margin: 20px 0 20px 0">
-                            <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 400px">
-                            <h5>${movieList[i].original_title}</h5>
+                    `<div class="col-md-3 movie" id="movie-${i}">
+                            <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 250px; width: 180px;">
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary detail-button" onmousedown="findMovieDetailsById('${movieList[i].id}', '${i}')">
                                 Movie Detail
@@ -165,9 +163,8 @@ function getPopularMovies() {
             let result = '';
             for (let i = 0; i < movieList.length; i++) {
                 result +=
-                    `<div class="col-lg-4" class="movie" id="movie-${i}" style="margin: 20px 0 20px 0">
-                            <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 400px">
-                            <h5>${movieList[i].original_title}</h5>
+                    `<div class="col-md-3 movie" id="movie-${i}">
+                            <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 250px; width: 180px">
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary detail-button" onmousedown="findMovieDetailsById('${movieList[i].id}', '${i}')">
                                 Movie Detail
@@ -189,9 +186,8 @@ function getTopRatedMovies() {
             let result = '';
             for (let i = 0; i < movieList.length; i++) {
                 result +=
-                    `<div class="col-lg-4" class="movie" id="movie-${i}" style="margin: 20px 0 20px 0">
-                            <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 400px">
-                            <h5>${movieList[i].original_title}</h5>
+                    `<div class="col-md-3 movie" id="movie-${i}">
+                            <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 250px; width: 180px">
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary detail-button" onmousedown="findMovieDetailsById('${movieList[i].id}', '${i}')">
                                 Movie Detail
@@ -204,7 +200,7 @@ function getTopRatedMovies() {
         })
 }
 
-function getTrending() {
+function getTrendingMovies() {
     $(".movie").remove();
     axios.get(`https://api.themoviedb.org/3/trending/movie/day?api_key=fce6281d9d40ad70409d4863f9cf2286`)
         .then((response) => {
@@ -213,9 +209,8 @@ function getTrending() {
             let result = '';
             for (let i = 0; i < movieList.length; i++) {
                 result +=
-                    `<div class="col-lg-4" class="movie" id="movie-${i}" style="margin: 20px 0 20px 0">
-                            <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 400px">
-                            <h5>${movieList[i].original_title}</h5>
+                    `<div class="col-md-3 movie" id="movie-${i}">
+                            <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 250px; width: 180px">
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary detail-button" onmousedown="findMovieDetailsById('${movieList[i].id}', '${i}')">
                                 Movie Detail

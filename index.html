@@ -7,48 +7,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Zilla+Slab:ital,wght@1,500&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
     <title>ADA Movie</title>
 </head>
 
 <body>
-
-
     <div class="container text-center">
-        <div class="row">
-            <div class="col-3">
-                <h3>Search movie</h3>
-                <form id="searchForm">
-                    <input type="text" class="" id="searchText" placeholder="Search Moveily">
+        <div class="row  navbar">
+            <div class="col-6" id="searchDiv">
+                <form class="forms" id="searchForm">
+                    <input type="text" class="" id="searchText" placeholder="Search movie" size="75">
                 </form>
             </div>
-            <div class="col-3">
-                <h3>What to watch?</h3>
-                <form id="wtwForm">
-                    <select name="wtw-age" id="wtwAge">
-                        <option value="G">All ages</option>
-                        <option value="PG">Children with parental guidance</option>
-                        <option value="PG-13">Children with parental caution</option>
-                        <option value="R">Children above 17</option>
-                        <option value="NR">Not evaluated film</option>
-                    </select>
-                    <button type="submit" id="wtwButton">Search</button>
-                </form>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-6">
+                        <form class="forms" id="ageForm">
+                            <select name="wtw-age" id="wtwAge">
+                                <option value="G">All ages</option>
+                                <option value="PG">Children with parental guidance</option>
+                                <option value="PG-13">Children with parental caution</option>
+                                <option value="R">Children above 17</option>
+                                <option value="NR">Not evaluated film</option>
+                            </select>
+                            <button type="submit" id="ageButton">Search</button>
+                        </form>
+                    </div>
+                    <div class="col-6">
+                        <form class="forms" id="movieForm">
+                            <select name="wtw-movie" id="wtwMovie">
+                                <option value="popular">Popular Movies</option>
+                                <option value="topRated">Top Rated Movies</option>
+                                <option value="trending">Trending Movies</option>
+                            </select>
+                            <button type="submit" id="movieButton">Search</button>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="col-3">
-                <h3>Popular Movies</h3>
-                <form id="popularMoviesForm">
-                    <button type="submit" id="popularMoviesButton">Get</button>
-                </form>
-            </div>
-            <div class="col-3">
-                <h3>Top Rated Movies</h3>
-                <form id="topRatedMoviesForm">
-                    <button type="submit" id="topRatedMoviesButton">Get</button>
-                </form>
-            </div>
-            <div class="row movie-list" id="movieList"></div>
         </div>
+        <div class="row movie-list" id="movieList"></div>
     </div>
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
