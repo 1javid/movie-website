@@ -33,7 +33,7 @@ $(document).ready(function () {
                         `<div class="col-md-3 movie" id="movie-${i}">
                             <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 250px; width: 180px">
                             <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-primary detail-button" onmousedown="findMovieDetailsById('${movieList[i].id}', '${i}')">
+                            <button type="button" class="btn btn-primary detail-button" onclick="findMovieDetailsById('${movieList[i].id}', '${i}')">
                                 Movie Detail
                             </button>
                         </div>`
@@ -139,7 +139,7 @@ function findMovieByRating(rating) {
                     `<div class="col-md-3 movie" id="movie-${i}">
                             <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 250px; width: 180px;">
                             <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-primary detail-button" onmousedown="findMovieDetailsById('${movieList[i].id}', '${i}')">
+                            <button type="button" class="btn btn-primary detail-button" onclick="findMovieDetailsById('${movieList[i].id}', '${i}')">
                                 Movie Detail
                             </button>
                         </div>`
@@ -163,7 +163,7 @@ function getPopularMovies() {
                     `<div class="col-md-3 movie" id="movie-${i}">
                             <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 250px; width: 180px">
                             <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-primary detail-button" onmousedown="findMovieDetailsById('${movieList[i].id}', '${i}')">
+                            <button type="button" class="btn btn-primary detail-button" onclick="findMovieDetailsById('${movieList[i].id}', '${i}')">
                                 Movie Detail
                             </button>
                         </div>`
@@ -186,7 +186,7 @@ function getTopRatedMovies() {
                     `<div class="col-md-3 movie" id="movie-${i}">
                             <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 250px; width: 180px">
                             <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-primary detail-button" onmousedown="findMovieDetailsById('${movieList[i].id}', '${i}')">
+                            <button type="button" class="btn btn-primary detail-button" onclick="findMovieDetailsById('${movieList[i].id}', '${i}')">
                                 Movie Detail
                             </button>
                         </div>`
@@ -209,7 +209,7 @@ function getTrendingMovies() {
                     `<div class="col-md-3 movie" id="movie-${i}">
                             <img src="https://image.tmdb.org/t/p/w500/${movieList[i].poster_path}" style="height: 250px; width: 180px">
                             <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-primary detail-button" onmousedown="findMovieDetailsById('${movieList[i].id}', '${i}')">
+                            <button type="button" class="btn btn-primary detail-button" onclick="findMovieDetailsById('${movieList[i].id}', '${i}')">
                                 Movie Detail
                             </button>
                         </div>`

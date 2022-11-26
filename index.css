@@ -1,6 +1,7 @@
 body {
     background-color: rgb(15, 15, 31);
     color: #F0CAA3;
+    text-align: center;
 }
 
 .forms {
@@ -18,6 +19,7 @@ body {
     border: 2px solid #F0CAA3;
     background-color: rgb(24, 24, 46);
     color: #F0CAA3;
+    width: 300px;
 }
 
 #searchText::placeholder {
@@ -137,5 +139,17 @@ img {
         width: 50%;
         margin: auto;
         margin-top: 5px;
+    }
+}
+
+@media only screen and (max-width: 330px) {
+    #searchText {
+        width: 280px;
+    }
+}
+
+@media only screen and (max-width: 300px) {
+    #searchText {
+        width: 200px;
     }
 }
